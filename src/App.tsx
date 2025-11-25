@@ -1,10 +1,7 @@
-// import { useEffect, useState } from "react";
-import useParisApi from "./assets/components/services/parisApi";
-import LineChartYear from "assets/components/types/LineChartYear";
-
-import "./App.css";
 // On importe le hook qui va récupérer les données de l'API
 import useParisApi from "./assets/components/hooks/useParisApi";
+
+import "./App.css";
 
 import "./App.css";
 
