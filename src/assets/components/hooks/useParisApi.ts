@@ -3,10 +3,8 @@
 // - useEffect : pour exécuter du code automatiquement au chargement du hook
 import { useEffect, useState } from "react";
 
-export default function parisApi() {
-  const apiUrl =
-    "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/lieux-de-tournage-a-paris/records?limit=20";
-
+// On customise le hook avec "use" devant et on lui ajoute un paramètre "url" pour le rendre réutilisable. Chaque composant pourra passer son URL spécifique.
+export default function useParisApi(url: string) {
   // apiData : contient les données récupérées depuis l'API
   // setApiData : sert à modifier ces données. Au début,pas encore de valeur (undefined)
   const [apiData, setApiData] = useState();
@@ -16,12 +14,12 @@ export default function parisApi() {
   // si pas de [], useEffect se relance à chaque changement de state et comme "fetchApi()" change "apiData" via "setApiData"(qui utilise un state), ça lance une boucle infinie.
   useEffect(() => {
     fetchApi();
-  }, []);
+  }, [url]); // On dépend maintenant de "url" et plus d'un tableau vide
 
   // Cette fonction va appeler l'API et récupérer les données
   const fetchApi = async () => {
     try {
-      const response = await fetch(apiUrl);
+      const response = await fetch(url); // On utilise l'url en paramètre, elle passe en dynamique au lieu de l'url en dur
 
       const data = await response.json();
 
