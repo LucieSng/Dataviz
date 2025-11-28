@@ -1,77 +1,86 @@
-// Tournages par année tous types confondus.
-
-// Import du graph depuis recharts.
+import { useEffect, useState } from "react";
 import {
-  LineChart,
-  XAxis,
-  YAxis,
   CartesianGrid,
-  Tooltip,
   Legend,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
 
-import useParisApi from "./hooks/useParisApi";
+interface YearlyAggregatedData {
+  annee_tournage: string;
+  "count(*)": number;
+}
 
-// Récupérer la data de l'api et l'afficher sur App.tsx
-// Grouper par année, récupérer que les années
-// Compter le nombre de tournages par année avec "count"
-// Trier par année croissante avec "sort"
+interface TransformedData {
+  year: string;
+  count: number;
+}
 
-const LineChartYear = ({ isAnimationActive = false }) => {
-  // On définit une URL spécifique pour ce graphique qui récupère les tournages groupés par année
-  const apiUrl =
-    "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/lieux-de-tournage-a-paris/records?select=annee_tournage,count(*)&group_by=annee_tournage&limit=100";
-  const { apiData } = useParisApi(apiUrl);
+export default function LineChartYear({ isAnimationActive = false }) {
+  const [apiData, setApiData] = useState<YearlyAggregatedData[] | undefined>(
+    undefined
+  );
+  const [chartData, setChartData] = useState<TransformedData[] | undefined>(
+    undefined
+  );
 
-  // Message pour le chargement des données
-  if (!apiData?.results) {
-    return <div>Chargement des données...</div>;
+  useEffect(() => {
+    fetchDataLineChartYear();
+  }, []);
+
+  async function fetchDataLineChartYear() {
+    const url =
+      "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/lieux-de-tournage-a-paris/records?select=annee_tournage,count(*)&group_by=annee_tournage&limit=100";
+
+    try {
+      const response = await fetch(url);
+      console.log("response log", response);
+
+      const data = await response.json();
+      console.log("data log", data);
+
+      // Extract the results array from the API response
+      const results = data.results;
+      setApiData(results);
+      console.log("apiData log", results);
+
+      // Transform data to extract year and rename count field
+      const transformed = results.map((item: YearlyAggregatedData) => ({
+        year: new Date(item.annee_tournage).getFullYear().toString(),
+        count: item["count(*)"],
+      }));
+      setChartData(transformed);
+      console.log("chartData log", transformed);
+
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
-  // Transformation des données
-  const chartData = apiData.results.map((item: any) => ({
-    name: item.annee_tournage,
-    tournages: item.count,
-  }));
-
-  // Afficher le graph
   return (
-    <LineChart
-      style={{
-        width: "100%",
-        maxWidth: "700px",
-        maxHeight: "70vh",
-        aspectRatio: 1.618,
-      }}
-      responsive
-      data={apiData}
-      margin={{
-        top: 5,
-        right: 30,
-        left: 20,
-        bottom: 5,
-      }}
-    >
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" />
-      <YAxis width="auto" />
-      <Tooltip />
-      <Legend />
-      <Line
-        type="monotone"
-        dataKey="pv"
-        stroke="#8884d8"
-        isAnimationActive={isAnimationActive}
-      />
-      <Line
-        type="monotone"
-        dataKey="uv"
-        stroke="#82ca9d"
-        isAnimationActive={isAnimationActive}
-      />
-    </LineChart>
+    <div>
+      {chartData && chartData.length > 0 && (
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="year" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="count"
+              stroke="#8884d8"
+              name="Nombre de tournages"
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      )}
+    </div>
   );
-};
-
-export default LineChartYear;
+}
