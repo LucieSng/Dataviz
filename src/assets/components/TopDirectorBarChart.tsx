@@ -36,13 +36,14 @@ export default function TopDirectorBarChart({ isAnimationActive = false }) {
 
   async function fetchDataTopDirector() {
     const url =
-      "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/lieux-de-tournage-a-paris/records?select=nom_realisateur,count(*)&where=nom_realisateur%20is%20not%20null&group_by=realisateur&order_by=count(*)%20DESC&limit=10";
+      "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/lieux-de-tournage-a-paris/records?select=nom_realisateur,count(*)&where=nom_realisateur%20is%20not%20null&group_by=nom_realisateur&order_by=count(*)%20DESC&limit=10";
 
     try {
       const response = await fetch(url);
       const data = await response.json();
       const results = data.results;
       setApiData(results);
+      console.log("results", results);
 
       const transformed = results.map((item: topDirectorDataTypes) => ({
         director: item.nom_realisateur,
