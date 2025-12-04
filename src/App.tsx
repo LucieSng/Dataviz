@@ -1,4 +1,5 @@
 // On importe le hook qui va récupérer les données de l'API
+import TopDirectorBarChart from "./assets/components/TopDirectorBarChart";
 import HorizontalBarArrond from "./assets/components/HorizontalBarArrond";
 import BarChartType from "./assets/components/BarChartType";
 import LineChartYear from "./assets/components/LineChartYear";
@@ -15,6 +16,7 @@ function App() {
       <BarChartType />
       <HorizontalBarArrond />
       <StackedAreaTypes />
+      <TopDirectorBarChart />
       <FooterComponent></FooterComponent>
     </>
   );
