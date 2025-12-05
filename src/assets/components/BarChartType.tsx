@@ -35,6 +35,8 @@ export default function BarChartType({ isAnimationActive = false }) {
     undefined
   );
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     fetchDataBarChartTypes();
   }, []);
@@ -60,6 +62,7 @@ export default function BarChartType({ isAnimationActive = false }) {
       console.log(data);
     } catch (error) {
       console.error("error");
+      setError("Erreur du chargement des données");
     }
   }
   //création de la legende personalisée au survol des barres du graph
@@ -86,6 +89,7 @@ export default function BarChartType({ isAnimationActive = false }) {
 
   return (
     <div>
+      {error && <div>{error}</div>}
       {chartData && chartData.length > 0 && (
         <ResponsiveContainer width="100%" height={400}>
           <BarChart data={chartData}>
