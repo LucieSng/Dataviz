@@ -2,22 +2,14 @@
 
 import LineChartYear from "./assets/components/LineChartYear";
 
-import useParisApi from "./assets/components/hooks/useParisApi";
 import HeaderComponent from "./assets/components/header";
 import "./App.css";
 
 function App() {
-  //le hook "useParisApi" retourne un objet contenant la donnée récupérée avec l'appel d'api et la propriété {apidata} permet d'extraire celle ci de cet objet.
-  // const { apiData } = useParisApi();
   return (
     <>
       <LineChartYear></LineChartYear>
       <HeaderComponent></HeaderComponent>
-      {/* <div>
-        {/* on affiche les données du json sous forme de string
-        A retirer plus tard:test de fonctionnement de l'appel d'api */}
-      {/* <div>{JSON.stringify(apiData)}</div>
-      </div> */}
     </>
   );
 }
