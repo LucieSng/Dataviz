@@ -35,6 +35,8 @@ export default function TopDirectorBarChart({ isAnimationActive = false }) {
     undefined
   );
 
+  const [error, setError] = useState<string | null>(null);
+
   // Stocke les données transformées et prêtes pour le graphique
   const [chartData, setChartData] = useState<
     transformedTopDirectorDataTypes[] | undefined
@@ -86,6 +88,7 @@ export default function TopDirectorBarChart({ isAnimationActive = false }) {
       setChartData(transformed);
     } catch (error) {
       console.error("Error");
+      setError("Erreur de chargement des données");
     }
   }
 
@@ -174,11 +177,8 @@ export default function TopDirectorBarChart({ isAnimationActive = false }) {
   // ========================================
   return (
     <div>
+      {error && <div>{error}</div>}
       <div className=" text-white">
-        {/* <h1 className="text-3xl font-bold mb-8 text-center">
-          Top Réalisateurs - Tournages à Paris
-        </h1> */}
-
         {/* MENU DÉROULANT DE SÉLECTION D'ANNÉE */}
         {availableYears.length > 0 && (
           <div className="mb-6 flex justify-center items-center gap-4">
@@ -228,9 +228,9 @@ export default function TopDirectorBarChart({ isAnimationActive = false }) {
 
               <Bar
                 dataKey="count"
-                fill="#8884d8"
-                name="Top 10 des Réalisateurs par année"
-                activeBar={<Rectangle fill="pink" stroke="blue" />}
+                fill="#413ea0"
+                name="Top des Réalisateurs par année"
+                activeBar={<Rectangle fill="gold" stroke="purple" />}
                 isAnimationActive={isAnimationActive}
               />
             </BarChart>
