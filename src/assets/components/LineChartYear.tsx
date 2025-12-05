@@ -35,6 +35,8 @@ export default function LineChartYear({ isAnimationActive = false }) {
     undefined
   );
 
+  const [error, setError] = useState<string | null>(null);
+
   // Dès que la page s'affiche, on lance automatiquement la fonction
   useEffect(() => {
     fetchDataLineChartYear();
@@ -67,12 +69,14 @@ export default function LineChartYear({ isAnimationActive = false }) {
 
       console.log(data);
     } catch (error) {
+      setError("Erreur du chargement des données");
       console.error(error);
     }
   }
 
   return (
     <div>
+      {error && <div>{error}</div>}
       {chartData &&
         chartData.length > 0 && ( // Affiche le graphique seulement si des données sont présentes
           <ResponsiveContainer width="100%" height={400}>
